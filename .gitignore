@@ -1,0 +1,67 @@
+# ===== Unity 生成目录（不纳入版本控制）=====
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Asset meta 必须保留（资产本体被跟踪时）
+!/[Aa]ssets/**/*.meta
+
+# ===== IDE / 编辑器缓存 =====
+.vs/
+.idea/
+.vscode/
+ExportedObj/
+.consulo/
+.gradle/
+
+# ===== Unity / VS 自动生成的解决方案与工程文件 =====
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# ===== Unity 自动生成的 meta =====
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Unity 崩溃报告
+sysinfo.txt
+
+# ===== 构建产物 =====
+*.apk
+*.aab
+*.unitypackage
+*.app
+
+# Crashlytics
+crashlytics-build.properties
+
+# Addressables 打包产物
+/[Aa]ssets/[Aa]ddressable[Aa]ssets[Dd]ata/*/*.bin*
+
+# Android 临时生成资源
+/[Aa]ssets/[Ss]treaming[Aa]ssets/aa.meta
+/[Aa]ssets/[Ss]treaming[Aa]ssets/aa/*
+
+# ===== 本机临时文件 =====
+*.orig
+*.bak
+Thumbs.db
+desktop.ini

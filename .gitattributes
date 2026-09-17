@@ -1,0 +1,41 @@
+# 让 Git 正确处理 Unity 文本资产，避免 LF/CRLF 反复改写
+* text=auto
+
+# 自身也强制 LF，消除 warning
+.gitignore     text eol=lf
+.gitattributes text eol=lf
+
+# 统一使用 LF，避免跨平台 diff 噪音
+*.cs        text eol=lf
+*.shader    text eol=lf
+*.json      text eol=lf
+*.xml       text eol=lf
+*.md        text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.meta      text eol=lf
+*.unity     text eol=lf
+*.prefab    text eol=lf
+*.asset     text eol=lf
+*.mat       text eol=lf
+*.anim      text eol=lf
+*.controller text eol=lf
+*.inputactions text eol=lf
+
+# 二进制，禁止任何转换
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.tga   binary
+*.psd   binary
+*.fbx   binary
+*.wav   binary
+*.mp3   binary
+*.ogg   binary
+*.dll   binary
+*.so    binary
+*.dylib binary
+*.exe   binary
+*.apk   binary
+*.aab   binary
+*.unitypackage binary
