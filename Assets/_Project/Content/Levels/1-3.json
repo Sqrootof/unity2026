@@ -1,0 +1,55 @@
+{
+  "id": "1-3",
+  "name": "堵住的门",
+  "schemaVersion": 1,
+  "size": { "x": 7, "y": 1, "z": 5 },
+  "terrain": [
+    { "type": "wall", "pos": { "x": 0, "y": 0, "z": 0 } },
+    { "type": "wall", "pos": { "x": 1, "y": 0, "z": 0 } },
+    { "type": "wall", "pos": { "x": 2, "y": 0, "z": 0 } },
+    { "type": "wall", "pos": { "x": 3, "y": 0, "z": 0 } },
+    { "type": "wall", "pos": { "x": 4, "y": 0, "z": 0 } },
+    { "type": "wall", "pos": { "x": 5, "y": 0, "z": 0 } },
+    { "type": "wall", "pos": { "x": 6, "y": 0, "z": 0 } },
+
+    { "type": "wall",  "pos": { "x": 0, "y": 0, "z": 1 } },
+    { "type": "floor", "pos": { "x": 1, "y": 0, "z": 1 } },
+    { "type": "floor", "pos": { "x": 2, "y": 0, "z": 1 } },
+    { "type": "wall",  "pos": { "x": 3, "y": 0, "z": 1 } },
+    { "type": "floor", "pos": { "x": 4, "y": 0, "z": 1 } },
+    { "type": "floor", "pos": { "x": 5, "y": 0, "z": 1 } },
+    { "type": "wall",  "pos": { "x": 6, "y": 0, "z": 1 } },
+
+    { "type": "wall",  "pos": { "x": 0, "y": 0, "z": 2 } },
+    { "type": "floor", "pos": { "x": 1, "y": 0, "z": 2 } },
+    { "type": "floor", "pos": { "x": 2, "y": 0, "z": 2 } },
+    { "type": "floor", "pos": { "x": 3, "y": 0, "z": 2 } },
+    { "type": "floor", "pos": { "x": 4, "y": 0, "z": 2 } },
+    { "type": "floor", "pos": { "x": 5, "y": 0, "z": 2 } },
+    { "type": "wall",  "pos": { "x": 6, "y": 0, "z": 2 } },
+
+    { "type": "wall",  "pos": { "x": 0, "y": 0, "z": 3 } },
+    { "type": "floor", "pos": { "x": 1, "y": 0, "z": 3 } },
+    { "type": "floor", "pos": { "x": 2, "y": 0, "z": 3 } },
+    { "type": "wall",  "pos": { "x": 3, "y": 0, "z": 3 } },
+    { "type": "floor", "pos": { "x": 4, "y": 0, "z": 3 } },
+    { "type": "floor", "pos": { "x": 5, "y": 0, "z": 3 } },
+    { "type": "wall",  "pos": { "x": 6, "y": 0, "z": 3 } },
+
+    { "type": "wall", "pos": { "x": 0, "y": 0, "z": 4 } },
+    { "type": "wall", "pos": { "x": 1, "y": 0, "z": 4 } },
+    { "type": "wall", "pos": { "x": 2, "y": 0, "z": 4 } },
+    { "type": "wall", "pos": { "x": 3, "y": 0, "z": 4 } },
+    { "type": "wall", "pos": { "x": 4, "y": 0, "z": 4 } },
+    { "type": "wall", "pos": { "x": 5, "y": 0, "z": 4 } },
+    { "type": "wall", "pos": { "x": 6, "y": 0, "z": 4 } }
+  ],
+  "objects": [
+    { "type": "box", "pos": { "x": 3, "y": 0, "z": 2 } }
+  ],
+  "markers": [
+    { "type": "spawn",  "pos": { "x": 1, "y": 0, "z": 1 }, "player": 0 },
+    { "type": "target", "pos": { "x": 5, "y": 0, "z": 2 } }
+  ],
+  "links": []
+}
