@@ -1,55 +1,225 @@
 {
-  "id": "1-3",
-  "name": "堵住的门",
-  "schemaVersion": 1,
-  "size": { "x": 7, "y": 1, "z": 5 },
-  "terrain": [
-    { "type": "wall", "pos": { "x": 0, "y": 0, "z": 0 } },
-    { "type": "wall", "pos": { "x": 1, "y": 0, "z": 0 } },
-    { "type": "wall", "pos": { "x": 2, "y": 0, "z": 0 } },
-    { "type": "wall", "pos": { "x": 3, "y": 0, "z": 0 } },
-    { "type": "wall", "pos": { "x": 4, "y": 0, "z": 0 } },
-    { "type": "wall", "pos": { "x": 5, "y": 0, "z": 0 } },
-    { "type": "wall", "pos": { "x": 6, "y": 0, "z": 0 } },
-
-    { "type": "wall",  "pos": { "x": 0, "y": 0, "z": 1 } },
-    { "type": "floor", "pos": { "x": 1, "y": 0, "z": 1 } },
-    { "type": "floor", "pos": { "x": 2, "y": 0, "z": 1 } },
-    { "type": "wall",  "pos": { "x": 3, "y": 0, "z": 1 } },
-    { "type": "floor", "pos": { "x": 4, "y": 0, "z": 1 } },
-    { "type": "floor", "pos": { "x": 5, "y": 0, "z": 1 } },
-    { "type": "wall",  "pos": { "x": 6, "y": 0, "z": 1 } },
-
-    { "type": "wall",  "pos": { "x": 0, "y": 0, "z": 2 } },
-    { "type": "floor", "pos": { "x": 1, "y": 0, "z": 2 } },
-    { "type": "floor", "pos": { "x": 2, "y": 0, "z": 2 } },
-    { "type": "floor", "pos": { "x": 3, "y": 0, "z": 2 } },
-    { "type": "floor", "pos": { "x": 4, "y": 0, "z": 2 } },
-    { "type": "floor", "pos": { "x": 5, "y": 0, "z": 2 } },
-    { "type": "wall",  "pos": { "x": 6, "y": 0, "z": 2 } },
-
-    { "type": "wall",  "pos": { "x": 0, "y": 0, "z": 3 } },
-    { "type": "floor", "pos": { "x": 1, "y": 0, "z": 3 } },
-    { "type": "floor", "pos": { "x": 2, "y": 0, "z": 3 } },
-    { "type": "wall",  "pos": { "x": 3, "y": 0, "z": 3 } },
-    { "type": "floor", "pos": { "x": 4, "y": 0, "z": 3 } },
-    { "type": "floor", "pos": { "x": 5, "y": 0, "z": 3 } },
-    { "type": "wall",  "pos": { "x": 6, "y": 0, "z": 3 } },
-
-    { "type": "wall", "pos": { "x": 0, "y": 0, "z": 4 } },
-    { "type": "wall", "pos": { "x": 1, "y": 0, "z": 4 } },
-    { "type": "wall", "pos": { "x": 2, "y": 0, "z": 4 } },
-    { "type": "wall", "pos": { "x": 3, "y": 0, "z": 4 } },
-    { "type": "wall", "pos": { "x": 4, "y": 0, "z": 4 } },
-    { "type": "wall", "pos": { "x": 5, "y": 0, "z": 4 } },
-    { "type": "wall", "pos": { "x": 6, "y": 0, "z": 4 } }
-  ],
-  "objects": [
-    { "type": "box", "pos": { "x": 3, "y": 0, "z": 2 } }
-  ],
-  "markers": [
-    { "type": "spawn",  "pos": { "x": 1, "y": 0, "z": 1 }, "player": 0 },
-    { "type": "target", "pos": { "x": 5, "y": 0, "z": 2 } }
-  ],
-  "links": []
+    "id": "1-3",
+    "name": "纵列排布",
+    "schemaVersion": 1,
+    "size": {
+        "x": 5,
+        "y": 2,
+        "z": 7
+    },
+    "baseHeight": 1,
+    "baseMaterial": "gray_light",
+    "terrain": [
+        {
+            "type": "void",
+            "pos": {
+                "x": 0,
+                "y": 0,
+                "z": 6
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 0,
+                "y": 0,
+                "z": 5
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 0,
+                "y": 0,
+                "z": 4
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 0,
+                "y": 0,
+                "z": 3
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 2,
+                "y": 0,
+                "z": 0
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 3,
+                "y": 0,
+                "z": 0
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 3,
+                "y": 0,
+                "z": 1
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 3,
+                "y": 0,
+                "z": 2
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 3,
+                "y": 0,
+                "z": 3
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 4,
+                "y": 0,
+                "z": 3
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 4,
+                "y": 0,
+                "z": 2
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 4,
+                "y": 0,
+                "z": 1
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 4,
+                "y": 0,
+                "z": 0
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 4,
+                "y": 0,
+                "z": 6
+            },
+            "dir": 0
+        },
+        {
+            "type": "void",
+            "pos": {
+                "x": 3,
+                "y": 0,
+                "z": 6
+            },
+            "dir": 0
+        }
+    ],
+    "objects": [
+        {
+            "type": "box",
+            "pos": {
+                "x": 2,
+                "y": 1,
+                "z": 2
+            },
+            "dir": 0
+        },
+        {
+            "type": "box",
+            "pos": {
+                "x": 1,
+                "y": 1,
+                "z": 3
+            },
+            "dir": 0
+        },
+        {
+            "type": "box",
+            "pos": {
+                "x": 2,
+                "y": 1,
+                "z": 4
+            },
+            "dir": 0
+        }
+    ],
+    "markers": [
+        {
+            "type": "spawn",
+            "pos": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "player": 0,
+            "color": "",
+            "height": 1
+        },
+        {
+            "type": "target",
+            "pos": {
+                "x": 0,
+                "y": 1,
+                "z": 1
+            },
+            "player": -1,
+            "color": "",
+            "height": 1
+        },
+        {
+            "type": "target",
+            "pos": {
+                "x": 0,
+                "y": 1,
+                "z": 2
+            },
+            "player": -1,
+            "color": "",
+            "height": 1
+        },
+        {
+            "type": "target",
+            "pos": {
+                "x": 0,
+                "y": 1,
+                "z": 0
+            },
+            "player": -1,
+            "color": "",
+            "height": 1
+        }
+    ],
+    "links": []
 }

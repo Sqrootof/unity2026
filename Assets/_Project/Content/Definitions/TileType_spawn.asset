@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: TileType_spawn
   m_EditorClassIdentifier: 
   id: spawn
-  displayName: "\u51FA\u751F\u70B9"
-  category: marker
+  displayName: "\u51FA\u751F\u70B9(Spawn)"
+  sortOrder: 2
+  category: mechanism
+  storeKind: marker
   prefab: {fileID: 0}
   color: {r: 0.25, g: 0.55, b: 0.9, a: 1}
   placeholderHeight: 0.12
+  surfaceMaterial: {fileID: 0}
   blocking: 0

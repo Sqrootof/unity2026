@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f170155c682813d4d948044acd5f1f65, type: 3}
-  m_Name: TileType_floor
+  m_Name: TileType_button
   m_EditorClassIdentifier: 
-  id: floor
-  displayName: "\u5730\u677F"
-  category: terrain
+  id: button
+  displayName: "\u89E3\u9501\u6309\u94AE(Button)"
+  sortOrder: 3
+  category: mechanism
+  storeKind: marker
   prefab: {fileID: 0}
-  color: {r: 0.7, g: 0.7, b: 0.7, a: 1}
-  placeholderHeight: 0.1
+  color: {r: 0.9, g: 0.35, b: 0.35, a: 1}
+  placeholderHeight: 0.2
+  surfaceMaterial: {fileID: 0}
   blocking: 0

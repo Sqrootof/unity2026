@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: TileRegistry
   m_EditorClassIdentifier: 
   types:
+  - {fileID: 11400000, guid: abf54549437677c43a1695f4a9ba8d84, type: 2}
   - {fileID: 11400000, guid: 5725c6e502cb4da4b843498b5dd6b897, type: 2}
-  - {fileID: 11400000, guid: 12313d0fe3fe8624fb2b4837fc783cc8, type: 2}
+  - {fileID: 11400000, guid: e3b159c263a484f4ea6235d1a89a4d97, type: 2}
+  - {fileID: 11400000, guid: 555cc8bda054e80408766338e9d00c6c, type: 2}
+  - {fileID: 11400000, guid: 6394c67c01f7fc84e8f2240be5743e65, type: 2}
   - {fileID: 11400000, guid: ebdcffb4ff9fee2448d788b82b1a1d4c, type: 2}
   - {fileID: 11400000, guid: d37f7bc78be280d47a720768b05df05d, type: 2}
-  - {fileID: 11400000, guid: 9914f5dcd65b7dc4dbda2ddea98c748c, type: 2}
+  - {fileID: 11400000, guid: de36cee9fce40ef47b52472df0de0646, type: 2}

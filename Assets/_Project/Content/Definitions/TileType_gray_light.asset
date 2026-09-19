@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f170155c682813d4d948044acd5f1f65, type: 3}
-  m_Name: TileType_target
+  m_Name: TileType_gray_light
   m_EditorClassIdentifier: 
-  id: target
-  displayName: "\u62B5\u8FBE\u70B9(Target)"
-  sortOrder: 1
-  category: mechanism
+  id: gray_light
+  displayName: "\u6D45\u7070"
+  sortOrder: 0
+  category: terrain
   storeKind: marker
   prefab: {fileID: 0}
-  color: {r: 0.2, g: 0.8, b: 0.35, a: 1}
-  placeholderHeight: 0.12
+  color: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  placeholderHeight: 1
   surfaceMaterial: {fileID: 0}
   blocking: 0

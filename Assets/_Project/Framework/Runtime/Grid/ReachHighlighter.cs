@@ -13,6 +13,7 @@ namespace Sokoban3D.Framework
         public KeyCode holdKey = KeyCode.LeftShift;
         public Color color = new Color(0.30f, 0.70f, 1f, 0.35f);
         public float liftAbove = 0.14f;
+        public int maxCells = 8000;
 
         readonly List<GameObject> _pool = new List<GameObject>();
         Transform _root;
@@ -34,6 +35,8 @@ namespace Sokoban3D.Framework
 
         void Show(List<Int3> cells)
         {
+            if (cells.Count > maxCells) cells = cells.GetRange(0, maxCells);
+
             EnsureRoot();
             EnsurePool(cells.Count);
 

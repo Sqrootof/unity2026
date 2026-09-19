@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f170155c682813d4d948044acd5f1f65, type: 3}
-  m_Name: TileType_wall
+  m_Name: TileType_black
   m_EditorClassIdentifier: 
-  id: wall
-  displayName: "\u5899"
+  id: black
+  displayName: "\u9ED1"
+  sortOrder: 2
   category: terrain
+  storeKind: marker
   prefab: {fileID: 0}
-  color: {r: 0.25, g: 0.25, b: 0.25, a: 1}
+  color: {r: 0.1, g: 0.1, b: 0.1, a: 1}
   placeholderHeight: 1
-  blocking: 1
+  surfaceMaterial: {fileID: 0}
+  blocking: 0

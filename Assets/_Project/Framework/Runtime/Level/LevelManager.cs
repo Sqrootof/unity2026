@@ -9,6 +9,9 @@ namespace Sokoban3D.Framework
     {
         public LevelBuilder builder;
         public float moveDuration = 0.12f;
+        public float pushDuration = 0.24f;
+        public float fallDuration = 0.18f;   // 从高柱走到更低的柱顶（掉落）
+        public float holdDelay = 0.28f;   // 按住多久才开始连续移动（低于此值单击只走一格）
         public Transform cameraTransform;
         public CameraController cameraController;
         public LevelCatalog catalog;
@@ -45,6 +48,9 @@ namespace Sokoban3D.Framework
         GridMover _playerMover;
         Transform _playerTransform;
         int _levelIndex;
+        Int3 _heldDir;
+        float _holdTime;
+        bool _holding;
         bool _busy;
         bool _solved;
 
@@ -118,10 +124,9 @@ namespace Sokoban3D.Framework
 
                 for (int i = 0; i < Dirs.Length; i++)
                 {
-                    var n = c + Dirs[i];
+                    Int3 n;
+                    if (!TryNeighbor(c, Dirs[i], out n)) continue;
                     if (_reachVisited.Contains(n)) continue;
-                    if (!Model.IsWalkable(n)) continue;
-                    if (Model.HasBox(n)) continue;
                     _reachVisited.Add(n);
                     _reachQueue.Enqueue(n);
                 }
@@ -158,6 +163,8 @@ namespace Sokoban3D.Framework
             SpawnPlayer();
             _busy = false;
             _solved = false;
+            RefreshWalls();
+            RefreshBoxHints();
         }
 
         public void ResetLevel()
@@ -243,27 +250,39 @@ namespace Sokoban3D.Framework
                 return;
             }
 
-            bool manual = Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.A)
-                       || Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.D);
-            if (manual)
+            Int3 dir = ReadDirection();
+            bool hasDir = !(dir.x == 0 && dir.y == 0 && dir.z == 0);
+
+            if (!hasDir)
             {
-                _autoWalking = false;
-                Int3 dir = ReadDirection();
-                if (dir.x == 0 && dir.y == 0 && dir.z == 0) return;
+                _holding = false;
+                _holdTime = 0f;
+
+                if (_autoWalking)
+                {
+                    StepAutoWalk();
+                    return;
+                }
+
+                if (Input.GetMouseButtonDown(0)) TryClickMove();
+                return;
+            }
+
+            _autoWalking = false;
+
+            if (!_holding || dir.x != _heldDir.x || dir.y != _heldDir.y || dir.z != _heldDir.z)
+            {
+                // 新方向：立即走一格（单击必定只走一格）
+                _holding = true;
+                _heldDir = dir;
+                _holdTime = 0f;
                 TryMove(dir);
                 return;
             }
 
-            if (_autoWalking)
-            {
-                StepAutoWalk();
-                return;
-            }
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                TryClickMove();
-            }
+            // 同一方向按住：超过阈值才开始连续步进
+            _holdTime += Time.deltaTime;
+            if (_holdTime >= holdDelay) TryMove(dir);
         }
 
         Int3 ReadDirection()
@@ -298,12 +317,14 @@ namespace Sokoban3D.Framework
             var cam = cameraTransform != null ? cameraTransform.GetComponent<Camera>() : Camera.main;
             if (cam == null) return;
 
+            float planeY = _playerCell.y * builder.cellSize;
+            var plane = new Plane(Vector3.up, new Vector3(0f, planeY, 0f));
             Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (!Physics.Raycast(ray, out hit, 500f)) return;
+            float dist;
+            if (!plane.Raycast(ray, out dist)) return;
 
-            Int3 cell = WorldToCell(hit.point);
-            if (!Model.IsWalkable(cell) || Model.HasBox(cell)) return;
+            Int3 cell = WorldToCell(ray.GetPoint(dist));
+            if (!Model.InXZ(cell.x, cell.z) || Model.TopAt(cell.x, cell.z) <= 0) return;
             if (!BuildPath(_playerCell, cell)) return;
 
             _pathIndex = 0;
@@ -315,7 +336,9 @@ namespace Sokoban3D.Framework
         {
             Vector3 lp = builder.transform.InverseTransformPoint(world);
             float cs = builder.cellSize;
-            return new Int3(Mathf.RoundToInt(lp.x / cs), 0, Mathf.RoundToInt(lp.z / cs));
+            int x = Mathf.RoundToInt(lp.x / cs);
+            int z = Mathf.RoundToInt(lp.z / cs);
+            return new Int3(x, Model.TopAt(x, z), z);
         }
 
         // BFS 最短路径，路径不含起点
@@ -337,10 +360,9 @@ namespace Sokoban3D.Framework
 
                 for (int i = 0; i < Dirs.Length; i++)
                 {
-                    var n = c + Dirs[i];
+                    Int3 n;
+                    if (!TryStepBack(c, Dirs[i], out n)) continue;
                     if (_pathPrev.ContainsKey(n)) continue;
-                    if (!Model.IsWalkable(n)) continue;
-                    if (Model.HasBox(n)) continue;
                     _pathPrev[n] = c;
                     _pathQueue.Enqueue(n);
                 }
@@ -370,31 +392,80 @@ namespace Sokoban3D.Framework
             Int3 next = _path[_pathIndex];
             _pathIndex++;
             _history.Add(Capture());
+            _playerMover.duration = next.y < _playerCell.y ? fallDuration : moveDuration;
             ApplyPlayerStep(next);
         }
 
         void TryMove(Int3 dir)
         {
-            Int3 to = _playerCell + dir;
-            if (!Model.IsWalkable(to)) return;
+            Int3 flat = _playerCell + dir;                 // 同层邻格（y 不变）
+            if (!Model.InXZ(flat.x, flat.z)) return;
 
-            var pushed = BoxViewAt(to);
-            Int3 beyond = to + dir;
-            if (pushed != null)
+            int top = Model.TopAt(flat.x, flat.z);         // 顶面（含箱子 +1 / 墙 +n）
+            if (top <= 0) return;                          // 虚空
+
+            var box = Model.BoxStateAtXZ(flat.x, flat.z);
+
+            // 更高：若该格箱子底面与脚下齐平 → 推箱
+            if (top > _playerCell.y)
             {
-                if (!Model.IsWalkable(beyond) || BoxViewAt(beyond) != null) return;
-            }
+                if (box == null || box.pos.y != _playerCell.y) return;
 
-            _history.Add(Capture());
+                Int3 beyond = flat + dir;
+                if (!Model.InXZ(beyond.x, beyond.z)) return;
+                if (Model.BoxStateAtXZ(beyond.x, beyond.z) != null) return;
 
-            if (pushed != null)
-            {
-                Model.MoveBox(pushed.State, beyond);
-                pushed.Refresh();
+                int destFloor = Model.FloorAt(beyond.x, beyond.z);
+                if (destFloor <= 0 || destFloor > _playerCell.y) return;   // 虚空 / 更高推不动
+
+                Int3 boxTo = new Int3(beyond.x, destFloor, beyond.z);
+                _history.Add(Capture());
+
+                bool fell = boxTo.y < _playerCell.y;
+                _playerMover.duration = pushDuration;
+                var bv = BoxViewOf(box);
+                if (bv != null)
+                {
+                    var bm = bv.GetComponent<GridMover>();
+                    if (bm != null) bm.duration = fell ? fallDuration : pushDuration;
+                }
+                Model.MoveBox(box, boxTo);
+                if (bv != null) bv.Refresh();
                 Pushes++;
+
+                ApplyPlayerStep(flat);                     // 玩家站进箱子原格（同层）
+                return;
             }
 
-            ApplyPlayerStep(to);
+            // 齐平（含踩上箱子顶 / 墙顶）或更低（掉下去）
+            _history.Add(Capture());
+            _playerMover.duration = top < _playerCell.y ? fallDuration : moveDuration;
+            ApplyPlayerStep(new Int3(flat.x, top, flat.z));
+        }
+
+        // 从 from 朝 dir 走一步的落点（不含推箱）：顶面 <= 脚下即可（齐平走上去 / 更低掉下去）。
+        // 供连续移动 / Shift 可达 / 点击寻路共用。
+        bool TryNeighbor(Int3 from, Int3 dir, out Int3 next)
+        {
+            next = from;
+            Int3 flat = from + dir;
+            if (!Model.InXZ(flat.x, flat.z)) return false;
+
+            int top = Model.TopAt(flat.x, flat.z);
+            if (top <= 0 || top > from.y) return false;    // 虚空 / 更高都去不了
+            next = new Int3(flat.x, top, flat.z);
+            return true;
+        }
+
+        // 仅"可原路返回"的一步：走过去后，反向也能立刻走回来。
+        // 下落这种单向移动不算（掉下去爬不回来）。用于点击自动寻路。
+        bool TryStepBack(Int3 from, Int3 dir, out Int3 next)
+        {
+            next = from;
+            if (!TryNeighbor(from, dir, out next)) return false;
+            Int3 back;
+            if (!TryNeighbor(next, new Int3(-dir.x, -dir.y, -dir.z), out back)) return false;
+            return back == from;
         }
 
         void ApplyPlayerStep(Int3 to)
@@ -409,6 +480,35 @@ namespace Sokoban3D.Framework
                 _solved = true;
                 Debug.Log("[LevelManager] 通关！");
             }
+
+            RefreshWalls();
+            SettlePlayer();
+            RefreshBoxHints();
+        }
+
+        // 脚下的支撑没了（如可解锁墙消失）→ 掉到当前顶面
+        void SettlePlayer()
+        {
+            if (Model == null) return;
+            int top = Model.TopAt(_playerCell.x, _playerCell.z);
+            if (top <= 0 || top >= _playerCell.y) return;
+
+            _playerCell = new Int3(_playerCell.x, top, _playerCell.z);
+            _playerMover.duration = fallDuration;
+            _playerMover.MoveTo(PlayerWorld(_playerCell));
+            _busy = true;
+
+            Model.SetActors(new[] { _playerCell });
+            if (builder != null) builder.RefreshLocks(Model);
+        }
+
+        BoxView BoxViewOf(BoxState s)
+        {
+            for (int i = 0; i < _boxViews.Count; i++)
+            {
+                if (_boxViews[i].State == s) return _boxViews[i];
+            }
+            return null;
         }
 
         void Undo()
@@ -430,6 +530,8 @@ namespace Sokoban3D.Framework
 
             _solved = s.solved;
             _busy = false;
+            RefreshWalls();
+            RefreshBoxHints();
         }
 
         Snapshot Capture()
@@ -441,14 +543,72 @@ namespace Sokoban3D.Framework
             return s;
         }
 
-        BoxView BoxViewAt(Int3 cell)
+        // 用当前角色位置重算可解锁墙的显隐（箱子位置模型内部已知）
+        void RefreshWalls()
+        {
+            if (Model == null) return;
+            Model.SetActors(new[] { _playerCell });
+            SettleBoxes();
+            if (builder != null) builder.RefreshLocks(Model);
+        }
+
+        // 箱子脚下的支撑没了（如可解锁墙消失）→ 掉到当前支撑面
+        void SettleBoxes()
         {
             for (int i = 0; i < _boxViews.Count; i++)
             {
-                var s = _boxViews[i].State;
-                if (s.pos.x == cell.x && s.pos.y == cell.y && s.pos.z == cell.z) return _boxViews[i];
+                var b = _boxViews[i].State;
+                int f = Model.FloorAt(b.pos.x, b.pos.z);
+                if (f <= 0 || f >= b.pos.y) continue;
+
+                Model.MoveBox(b, new Int3(b.pos.x, f, b.pos.z));
+                var bm = _boxViews[i].GetComponent<GridMover>();
+                if (bm != null) bm.duration = fallDuration;
+                _boxViews[i].Refresh();
             }
-            return null;
+        }
+
+        // 箱子推进"永远推不动"的格子（且不是抵达点）时变灰
+        void RefreshBoxHints()
+        {
+            if (Model == null) return;
+            for (int i = 0; i < _boxViews.Count; i++)
+            {
+                var p = _boxViews[i].State.pos;
+                _boxViews[i].SetHints(IsStaticDead(p), IsTargetCell(p));
+            }
+        }
+
+        // 箱子能否朝 dir 被推：玩家站位与箱子底面同层，落点同层或更低（可推下台阶）且非虚空、无箱
+        bool CanPush(Int3 c, Int3 dir)
+        {
+            Int3 behind = c - dir;
+            if (!Model.InXZ(behind.x, behind.z)) return false;
+            if (Model.TopAt(behind.x, behind.z) != c.y) return false;
+
+            Int3 dest = c + dir;
+            if (!Model.InXZ(dest.x, dest.z)) return false;
+            if (Model.BoxStateAtXZ(dest.x, dest.z) != null) return false;
+
+            int df = Model.FloorAt(dest.x, dest.z);
+            return df > 0 && df <= c.y;
+        }
+
+        bool IsStaticDead(Int3 c)
+        {
+            if (IsTargetCell(c)) return false;
+            return !CanPush(c, new Int3(1, 0, 0)) && !CanPush(c, new Int3(-1, 0, 0))
+                && !CanPush(c, new Int3(0, 0, 1)) && !CanPush(c, new Int3(0, 0, -1));
+        }
+
+        bool IsTargetCell(Int3 c)
+        {
+            for (int i = 0; i < Model.Markers.Count; i++)
+            {
+                var m = Model.Markers[i];
+                if (m.type == "target" && m.pos == c) return true;
+            }
+            return false;
         }
 
         bool BoxesIdle()

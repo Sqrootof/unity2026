@@ -65,6 +65,10 @@ namespace Sokoban3D.Framework
         public int schemaVersion = 1;
         public Int3 size = new Int3(1, 1, 1);
 
+        // 隐含底面：没有单独写地形的格子，默认按这个高度/材质生成（0 = 虚空）
+        public int baseHeight = 0;
+        public string baseMaterial = "gray_light";
+
         public List<TerrainEntry> terrain = new List<TerrainEntry>();
         public List<ObjectEntry> objects = new List<ObjectEntry>();
         public List<MarkerEntry> markers = new List<MarkerEntry>();
@@ -96,7 +100,8 @@ namespace Sokoban3D.Framework
         public string type = "target";
         public Int3 pos = new Int3(0, 0, 0);
         public int player = -1; // 只有 spawn 用：0=第一个角色
-        public string color = ""; // 只有 button 用，如 "red"
+        public string color = ""; // 机器颜色（整数），如 "1"；按钮/可解锁墙用
+        public int height = 1;    // 可解锁墙的高度
     }
 
     [Serializable]

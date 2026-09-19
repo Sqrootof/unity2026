@@ -329,6 +329,7 @@ MonoBehaviour:
   minDistance: 4
   maxDistance: 20
   rotateSpeed: 120
+  snapTime: 0.12
   followSmooth: 0.12
 --- !u!1 &1435271035
 GameObject:
@@ -363,6 +364,11 @@ MonoBehaviour:
   registry: {fileID: 11400000, guid: 97d70bdd98e667e489710f405d35aa2a, type: 2}
   levelFile: {fileID: 4900000, guid: f69a7f3ef9eda234e9a967831e75d6c2, type: 3}
   cellSize: 1
+  chunkSize: 16
+  blockScale: 0.94
+  objectScale: 0.8
+  markerScale: 0.87
+  flatColors: 0
 --- !u!4 &1435271037
 Transform:
   m_ObjectHideFlags: 0
@@ -392,6 +398,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   builder: {fileID: 1435271036}
   moveDuration: 0.12
+  pushDuration: 0.24
+  holdDelay: 0.28
   cameraTransform: {fileID: 963194228}
   cameraController: {fileID: 963194229}
   catalog: {fileID: 11400000, guid: 29f0e3d8d1f02174eb95f69618ae6197, type: 2}
